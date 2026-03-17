@@ -1,9 +1,12 @@
 ---
-import { SITE } from 'astrowind:config';
+import { portfolioProfile } from '~/data/portfolio';
 ---
 
-<span
-  class="self-center ml-2 rtl:ml-0 rtl:mr-2 text-2xl md:text-xl font-bold text-gray-900 whitespace-nowrap dark:text-white"
->
-  🚀 {SITE?.name}
+<span class="flex items-center gap-2 whitespace-nowrap text-slate-100">
+  <span class="text-lg font-mono text-green-400">$</span>
+  <span class="flex flex-col leading-none">
+    <span class="font-heading text-[15px] tracking-[0.08em] md:text-sm">{portfolioProfile.name}</span>
+    <span class="mt-1 font-heading text-[10px] uppercase tracking-[0.22em] text-slate-400">{portfolioProfile.nameEn}</span>
+  </span>
+  <span class="inline-block h-5 w-2 bg-green-400 terminal-cursor"></span>
 </span>
