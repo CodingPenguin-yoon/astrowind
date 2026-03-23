@@ -110,6 +110,7 @@ export interface PortfolioProject {
   kicker: string;
   title: string;
   meta: string;
+  repoHref: string;
   summary: string;
   implementationLabel: string;
   implementation: string;
@@ -125,6 +126,7 @@ export const selectedProjects: PortfolioProject[] = [
     kicker: '프로젝트 01 · 자연어 기반 운영 제어면',
     title: 'K-Le-PaaS',
     meta: '운영 자동화 백엔드',
+    repoHref: 'https://github.com/K-Le-PaaS/backend-hybrid',
     summary:
       'GitHub·Kubernetes·Slack·클라우드 배포 흐름을 FastAPI 백엔드로 통합해 배포·롤백·모니터링·자연어 명령을 하나의 운영 흐름으로 묶은 프로젝트입니다.',
     implementationLabel: '직접 구현한 범위',
@@ -144,6 +146,7 @@ export const selectedProjects: PortfolioProject[] = [
     kicker: '프로젝트 02 · 인프라 자동화 제어면',
     title: 'Heimdall',
     meta: 'VM 배포와 후처리 워크플로우 기반',
+    repoHref: 'https://github.com/CodingPenguin-yoon/Heimdall',
     summary:
       'Proxmox 템플릿 클론, Terraform, Ansible, Task/SSE를 연결해 VM 배포와 후처리를 워크플로우로 제어하는 인프라 자동화 기반입니다.',
     implementationLabel: '현재 구현한 기반',
@@ -162,6 +165,7 @@ export const selectedProjects: PortfolioProject[] = [
     kicker: '프로젝트 03 · 질문 중심 정보 서비스',
     title: 'Argus',
     meta: '해석형 금융 정보 서비스',
+    repoHref: 'https://github.com/CodingPenguin-yoon/argus-renewal',
     summary:
       '뉴스·파생·매크로 데이터를 질문 중심 정보 구조로 재구성해 사용자의 판단 비용을 줄이는 해석형 금융 정보 서비스입니다.',
     implementationLabel: '직접 구현한 범위',
