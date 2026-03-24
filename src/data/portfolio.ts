@@ -14,7 +14,7 @@ export const portfolioProfile = {
     github: 'https://github.com/CodingPenguin-yoon',
     linkedin: '',
     instagram: '',
-    blog: '/blog',
+    blog: '',
   },
 };
 
@@ -84,7 +84,7 @@ export const experienceTimeline: Item[] = [
   {
     title: '1. 흐름을 먼저 설계한다',
     description:
-      '<span class="mb-3 inline-flex flex-wrap gap-2"><span class="rounded-full border border-slate-700/80 bg-slate-900/70 px-3 py-1 text-[11px] font-mono tracking-[0.08em] text-cyan-300">K-Le-PaaS</span><span class="rounded-full border border-slate-700/80 bg-slate-900/70 px-3 py-1 text-[11px] font-mono tracking-[0.08em] text-cyan-300">Heimdall</span></span><br />단일 명령보다 실행 순서와 연결 관계를 먼저 정리합니다. 운영 자동화는 언제든 되돌리고 추적할 수 있는 흐름이어야 한다고 봅니다.',
+      '<span class="mb-3 inline-flex flex-wrap gap-2"><span class="rounded-full border border-slate-700/80 bg-slate-900/70 px-3 py-1 text-[11px] font-mono tracking-[0.08em] text-cyan-300">K-Le-PaaS</span><span class="rounded-full border border-slate-700/80 bg-slate-900/70 px-3 py-1 text-[11px] font-mono tracking-[0.08em] text-cyan-300">Heimdall</span></span><br />단일 명령보다 실행 순서와 연결 관계를 먼저 정리합니다. 운영 자동화는 언제든 되돌리고 추적할 수 있는 흐름으로 설계합니다.',
     icon: 'tabler:route-square',
   },
   {
@@ -169,9 +169,10 @@ export const selectedProjects: PortfolioProject[] = [
     meta: 'VM 배포와 후처리 워크플로우 기반',
     repoHref: 'https://github.com/CodingPenguin-yoon/Heimdall',
     visual: {
+      src: '/projects/heimdall.png',
       alt: 'Heimdall workflow deployment screenshot',
       label: '워크플로우 화면',
-      caption: 'VM 배포 진행 상태와 후처리 단계를 함께 보여주는 대표 화면을 이 위치에 배치할 예정입니다.',
+      caption: '배포 요청 입력, 실행 단계, 상태 추적 패널을 한 화면에 묶어 VM 배포 흐름을 보여주는 Heimdall 대표 화면입니다.',
     },
     summary:
       'Proxmox 템플릿 클론, Terraform, Ansible, Task·SSE를 연결해 VM 배포와 후처리를 제어하는 인프라 자동화 워크플로우입니다.',
@@ -180,7 +181,7 @@ export const selectedProjects: PortfolioProject[] = [
     designPoint: '흩어진 인프라 준비 작업을 배포, 후처리, 상태 확인의 일관된 흐름으로 정리했습니다.',
     significanceLabel: '프로젝트 의미',
     significance:
-      'VM 배포와 후처리를 워크플로우로 제어하는 기반을 구현했고, 다음 단계로 GitLab 중심의 개발자 셀프서비스 환경 플랫폼으로 확장할 계획입니다.',
+      'VM 배포와 후처리를 워크플로우로 제어하는 기반을 구현했고, 다음 단계는 GitLab 중심의 개발자 셀프서비스 환경 플랫폼 확장입니다.',
     highlightNote: '현재 구현 / 다음 단계 분리',
     panelPoints: [
       { label: '현재 구현', value: '템플릿 클론 기반 VM 배포 엔진' },
@@ -196,9 +197,10 @@ export const selectedProjects: PortfolioProject[] = [
     meta: '금융 데이터 분석·가공 서비스',
     repoHref: 'https://github.com/CodingPenguin-yoon/argus-renewal',
     visual: {
+      src: '/projects/argus.png',
       alt: 'Argus market intelligence dashboard screenshot',
       label: '대시보드 화면',
-      caption: '시장 데이터와 인사이트를 한 번에 읽을 수 있는 대표 화면을 이 위치에 배치할 예정입니다.',
+      caption: '시장 지표, 뉴스 흐름, 해석형 인사이트를 한 화면에서 읽을 수 있도록 구성한 Argus 대표 대시보드입니다.',
     },
     summary: '뉴스·파생·매크로 데이터를 수집·가공해 대시보드와 인사이트 형태로 제공하는 금융 데이터 서비스입니다.',
     implementationLabel: '구현한 내용',
