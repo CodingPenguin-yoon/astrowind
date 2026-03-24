@@ -52,13 +52,19 @@ if (portfolioProfile.socials.github) {
   });
 }
 
-const terminalSuggestions = ['help', 'whoami', 'ls projects/', 'cat focus.txt'];
+const heroTerminalSuggestions = ['help', 'projects', 'focus', 'contact'];
+const floatingTerminalSuggestions = ['top', 'klepaas', 'heimdall', 'argus'];
 
 const terminalCommandCatalog = [
   {
     key: 'help',
     aliases: ['help', '?'],
-    output: ['whoami', 'ls projects/', 'cat focus.txt', 'open github', 'clear'],
+    output: [
+      'whoami',
+      'projects / klepaas / heimdall / argus',
+      'about / focus / experience / toolkit / contact',
+      'top / github / clear',
+    ],
   },
   {
     key: 'whoami',
@@ -69,16 +75,69 @@ const terminalCommandCatalog = [
     key: 'ls projects/',
     aliases: ['ls projects/', 'projects', 'ls'],
     output: selectedProjects.map((project) => project.title),
+    action: { type: 'scroll', target: '#projects' },
+  },
+  {
+    key: 'klepaas',
+    aliases: ['klepaas', 'k-le-paas'],
+    output: ['K-Le-PaaS 프로젝트로 이동합니다.'],
+    action: { type: 'scroll', target: '#klepaas' },
+  },
+  {
+    key: 'heimdall',
+    aliases: ['heimdall'],
+    output: ['Heimdall 프로젝트로 이동합니다.'],
+    action: { type: 'scroll', target: '#heimdall' },
+  },
+  {
+    key: 'argus',
+    aliases: ['argus'],
+    output: ['Argus 프로젝트로 이동합니다.'],
+    action: { type: 'scroll', target: '#argus' },
   },
   {
     key: 'cat focus.txt',
     aliases: ['cat focus.txt', 'focus'],
     output: focusAreas.slice(0, 4).map(({ title }) => `▸ ${title}`),
+    action: { type: 'scroll', target: '#focus' },
+  },
+  {
+    key: 'about',
+    aliases: ['about', 'intro'],
+    output: ['소개 섹션으로 이동합니다.'],
+    action: { type: 'scroll', target: '#about' },
+  },
+  {
+    key: 'experience',
+    aliases: ['experience', 'principles'],
+    output: ['설계 원칙 섹션으로 이동합니다.'],
+    action: { type: 'scroll', target: '#experience' },
+  },
+  {
+    key: 'toolkit',
+    aliases: ['toolkit', 'stack'],
+    output: ['기술 섹션으로 이동합니다.'],
+    action: { type: 'scroll', target: '#toolkit' },
+  },
+  {
+    key: 'contact',
+    aliases: ['contact', 'mail'],
+    output: ['연락하기 섹션으로 이동합니다.'],
+    action: { type: 'scroll', target: '#contact' },
+  },
+  {
+    key: 'top',
+    aliases: ['top', 'home', 'cd ~'],
+    output: ['페이지 맨 위로 이동합니다.'],
+    action: { type: 'scrollTop' },
   },
   {
     key: 'open github',
     aliases: ['open github', 'github'],
-    output: [portfolioProfile.socials.github || 'GitHub 링크가 아직 설정되지 않았습니다.'],
+    output: [
+      portfolioProfile.socials.github ? 'GitHub를 새 탭에서 엽니다.' : 'GitHub 링크가 아직 설정되지 않았습니다.',
+    ],
+    action: portfolioProfile.socials.github ? { type: 'link', href: portfolioProfile.socials.github } : undefined,
   },
   {
     key: 'clear',
@@ -91,6 +150,8 @@ const heroPanel = `
   <div
     class="relative overflow-hidden rounded-lg border border-slate-700/80 bg-slate-900/95 shadow-2xl shadow-green-500/10 font-mono"
     data-terminal-root
+    data-terminal-role="hero"
+    data-terminal-empty-text="명령어를 입력하면 답변과 함께 섹션 이동도 할 수 있습니다."
   >
     <div class="flex items-center gap-2 border-b border-slate-700/50 bg-slate-800/80 px-4 py-3">
       <div class="flex gap-1.5">
@@ -105,7 +166,7 @@ const heroPanel = `
       <div class="rounded-xl border border-slate-700/60 bg-slate-950/40 p-4">
         <p class="text-[11px] uppercase tracking-[0.18em] text-slate-500">Interactive terminal</p>
         <p class="mt-2 leading-relaxed text-slate-300">
-          명령어를 입력하면 답변 영역만 갱신됩니다. 예시를 눌러 바로 시작할 수도 있습니다.
+          명령어를 입력하면 답변과 함께 섹션 이동도 실행할 수 있습니다. 예시를 눌러 바로 시작할 수도 있습니다.
         </p>
       </div>
 
@@ -114,14 +175,14 @@ const heroPanel = `
           class="rounded-xl border border-dashed border-slate-700/60 bg-slate-950/30 px-4 py-3 leading-relaxed text-slate-500"
           data-terminal-empty
         >
-          아직 표시할 답변이 없습니다.
+          명령어를 입력하면 답변과 함께 섹션 이동도 할 수 있습니다.
         </div>
       </div>
 
       <div class="rounded-xl border border-slate-700/60 bg-slate-800/30 p-4">
         <p class="text-[11px] uppercase tracking-[0.18em] text-slate-500">Try these</p>
         <div class="mt-3 flex flex-wrap gap-2">
-          ${terminalSuggestions
+          ${heroTerminalSuggestions
             .map(
               (command) => `
                 <button
@@ -150,7 +211,7 @@ const heroPanel = `
           name="command"
           autocomplete="off"
           spellcheck="false"
-          placeholder="help, whoami, ls projects/, cat focus.txt"
+          placeholder="help, projects, focus, contact"
           data-terminal-input
         />
         <span class="hidden h-4 w-2 shrink-0 bg-green-400 terminal-cursor md:inline-block"></span>
@@ -214,24 +275,47 @@ const buildProjectPanel = (project: PortfolioProject) => `
   <div class="group relative overflow-hidden rounded-lg border border-slate-700/80 bg-slate-900/95 shadow-2xl shadow-cyan-500/10 transition-all duration-300 hover:border-green-500/40 hover:shadow-green-500/15">
     <div class="flex items-center justify-between gap-3 border-b border-slate-700/50 bg-gradient-to-r from-slate-800/80 to-slate-800/40 px-5 py-4">
       <span class="text-xs font-mono uppercase tracking-wider text-green-400">${project.kicker}</span>
-      <div class="flex flex-wrap items-center justify-end gap-2">
-        <span class="rounded-full border border-slate-600/50 bg-slate-800 px-3 py-1 text-xs font-mono text-cyan-300">${project.meta}</span>
-        <a
-          class="rounded-full border border-green-500/40 bg-green-500/10 px-3 py-1 text-xs font-mono text-green-400 transition hover:border-green-400 hover:bg-green-500/20"
-          href="${project.repoHref}"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          GitHub
-        </a>
-      </div>
+      <span class="rounded-full border border-slate-600/50 bg-slate-800 px-3 py-1 text-xs font-mono text-cyan-300">${project.meta}</span>
     </div>
 
-    <div class="p-6">
-      <h3 class="text-2xl font-bold text-slate-100 transition-colors group-hover:text-green-400">${project.title}</h3>
-      <p class="mt-3 text-sm leading-relaxed text-slate-300/85">${project.summary}</p>
+    <div class="p-5">
+      <div class="overflow-hidden rounded-2xl border border-slate-700/70 bg-slate-950/95 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
+        <div class="flex items-center justify-between border-b border-slate-700/60 bg-slate-900/90 px-4 py-3">
+          <span class="text-[11px] font-mono uppercase tracking-[0.18em] text-slate-500">${project.visual.label}</span>
+          <span class="text-xs font-mono text-cyan-300">${project.title}</span>
+        </div>
 
-      <div class="mt-6 grid gap-3">
+        <div class="aspect-[16/10] overflow-hidden bg-[radial-gradient(circle_at_top,rgba(34,197,94,0.16),transparent_35%),linear-gradient(180deg,rgba(2,6,23,0.98),rgba(15,23,42,0.92))]">
+          ${
+            project.visual.src
+              ? `
+                <img
+                  src="${project.visual.src}"
+                  alt="${project.visual.alt}"
+                  class="h-full w-full object-cover object-top"
+                  loading="lazy"
+                />
+              `
+              : `
+                <div class="flex h-full flex-col items-center justify-center px-6 text-center">
+                  <span class="rounded-full border border-slate-700/70 bg-slate-900/70 px-3 py-1 text-[11px] font-mono uppercase tracking-[0.18em] text-slate-500">
+                    Image Slot Ready
+                  </span>
+                  <p class="mt-4 max-w-sm text-sm leading-relaxed text-slate-300/80">
+                    실제 프로젝트 이미지를 받으면 이 영역에 대표 화면을 바로 연결할 수 있습니다.
+                  </p>
+                </div>
+              `
+          }
+        </div>
+      </div>
+
+      <div class="mt-4 rounded-xl border border-slate-700/60 bg-slate-800/35 p-4">
+        <p class="text-[11px] font-mono uppercase tracking-[0.18em] text-slate-500">Screen Note</p>
+        <p class="mt-2 text-sm leading-relaxed text-slate-300/82">${project.visual.caption}</p>
+      </div>
+
+      <div class="mt-5 grid gap-3">
         ${project.panelPoints
           .map(
             (point) => `
@@ -250,7 +334,7 @@ const buildProjectPanel = (project: PortfolioProject) => `
           .join('')}
       </div>
 
-      <div class="mt-6 flex flex-wrap gap-2">
+      <div class="mt-5 flex flex-wrap gap-2">
         ${project.stack
           .map(
             (item) => `
@@ -350,46 +434,59 @@ if (!contactActions.length && portfolioProfile.socials.blog) {
 
     <Fragment slot="content">
       <p class="leading-relaxed text-slate-300/85">
-        세 프로젝트는 각각 운영 제어, 인프라 워크플로우, 질문 중심 정보 구조를 다루지만, 공통적으로 복잡한 입력과 상태를
-        사람이 다시 사용할 수 있는 흐름으로 정리하는 데 초점을 둡니다.
+        세 프로젝트는 각각 운영 제어, 인프라 자동화, 금융 데이터 가공을 다루지만, 공통적으로 복잡한 입력과 상태를 사람이
+        다시 사용할 수 있는 흐름으로 정리한다는 점에서 연결됩니다.
       </p>
     </Fragment>
   </Content>
 
   {
     selectedProjects.map((project, index) => (
-      <Content
-        id={index === 0 ? 'projects' : undefined}
-        isReversed={index % 2 === 1}
-        isAfterContent={index > 0}
-        title={index === 0 ? '대표 프로젝트' : undefined}
-        subtitle={
-          index === 0 ? '한 줄 요약, 직접 구현한 범위, 설계 포인트, 프로젝트 의의 기준으로 정리했습니다.' : undefined
-        }
-        image={buildProjectPanel(project)}
-        items={[
-          { title: project.implementationLabel, description: project.implementation },
-          { title: '설계 포인트', description: project.designPoint },
-          { title: project.significanceLabel, description: project.significance },
-        ]}
-      >
-        <Fragment slot="content">
-          <p class="font-mono text-sm font-semibold uppercase tracking-[0.24em] text-green-400">{project.kicker}</p>
-          <h3 class="mt-3 text-3xl font-bold tracking-tight text-slate-100 sm:text-4xl">{project.title}</h3>
-          <p class="mt-4 leading-relaxed text-slate-300/85">{project.summary}</p>
+      <div id={project.sectionId} class="scroll-mt-24">
+        <Content
+          id={index === 0 ? 'projects' : undefined}
+          isReversed={index % 2 === 1}
+          isAfterContent={index > 0}
+          title={index === 0 ? '대표 프로젝트' : undefined}
+          subtitle={
+            index === 0 ? '한 줄 요약, 구현한 내용, 설계 포인트, 프로젝트 의미 기준으로 정리했습니다.' : undefined
+          }
+          image={buildProjectPanel(project)}
+          items={[
+            { title: project.implementationLabel, description: project.implementation },
+            { title: '설계 포인트', description: project.designPoint },
+            { title: project.significanceLabel, description: project.significance },
+          ]}
+        >
+          <Fragment slot="content">
+            <p class="font-mono text-sm font-semibold uppercase tracking-[0.24em] text-green-400">{project.kicker}</p>
+            <h3 class="mt-3 text-3xl font-bold tracking-tight text-slate-100 sm:text-4xl">{project.title}</h3>
+            <p class="mt-4 leading-relaxed text-slate-300/85">{project.summary}</p>
 
-          <div class="mt-5 flex flex-wrap gap-2">
-            <span class="rounded-full border border-slate-700/60 bg-slate-800/60 px-3 py-1 text-xs font-mono text-cyan-300">
-              {project.meta}
-            </span>
-            {project.significanceLabel === '로드맵' && (
-              <span class="rounded-full border border-cyan-500/30 bg-cyan-950/20 px-3 py-1 text-xs font-mono text-cyan-200">
-                현재 구현 / 로드맵 분리
+            <div class="mt-6">
+              <a
+                class="inline-flex items-center rounded-full border border-green-500/50 bg-green-500/10 px-4 py-2 text-sm font-mono text-green-300 transition hover:border-green-400 hover:bg-green-500/20 hover:text-green-200"
+                href={project.repoHref}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                GitHub 저장소 보기
+              </a>
+            </div>
+
+            <div class="mt-5 flex flex-wrap gap-2">
+              <span class="rounded-full border border-slate-700/60 bg-slate-800/60 px-3 py-1 text-xs font-mono text-cyan-300">
+                {project.meta}
               </span>
-            )}
-          </div>
-        </Fragment>
-      </Content>
+              {project.highlightNote && (
+                <span class="rounded-full border border-cyan-500/30 bg-cyan-950/20 px-3 py-1 text-xs font-mono text-cyan-200">
+                  {project.highlightNote}
+                </span>
+              )}
+            </div>
+          </Fragment>
+        </Content>
+      </div>
     ))
   }
 
@@ -419,16 +516,21 @@ if (!contactActions.length && portfolioProfile.socials.blog) {
   <Steps
     id="experience"
     title="설계 원칙"
-    subtitle="프로젝트마다 대상은 달라도 아래 원칙은 공통으로 적용합니다."
+    subtitle="프로젝트는 달라도, 아래 기준은 공통으로 적용합니다."
     items={experienceTimeline}
     classes={{
-      container: 'max-w-4xl',
+      container: 'max-w-[54rem]',
       headline: {
-        subtitle: 'text-slate-300/80',
+        container: 'mb-10 max-w-2xl text-left md:mx-0',
+        title: 'text-4xl lg:text-[2.8rem]',
+        subtitle: 'mt-3 max-w-2xl text-base leading-relaxed text-slate-300/75',
       },
       items: {
-        title: 'text-slate-100',
-        description: 'text-slate-300/75 leading-relaxed',
+        container: 'space-y-3',
+        panel: 'items-start',
+        title: 'text-[1.9rem] leading-tight tracking-tight text-slate-100',
+        description: 'mt-3 max-w-3xl text-base leading-8 text-slate-300/78',
+        icon: 'h-11 w-11 border-blue-500/60 bg-slate-900/90 text-slate-100',
       },
     }}
   />
@@ -465,6 +567,98 @@ if (!contactActions.length && portfolioProfile.socials.blog) {
     </Fragment>
   </CallToAction>
 
+  <div
+    class="pointer-events-none fixed bottom-5 right-5 z-[70] hidden max-md:hidden"
+    data-terminal-floating-shell
+    aria-hidden="true"
+  >
+    <button
+      type="button"
+      class="pointer-events-auto hidden items-center gap-2 rounded-full border border-slate-700/80 bg-slate-900/95 px-4 py-3 font-mono text-sm text-cyan-300 shadow-2xl shadow-cyan-500/10 transition hover:border-green-500/40 hover:text-green-300"
+      data-terminal-floating-trigger
+    >
+      <span class="text-green-400">$</span>
+      <span>open console</span>
+    </button>
+
+    <div
+      class="pointer-events-auto hidden w-[22rem] overflow-hidden rounded-2xl border border-slate-700/80 bg-slate-900/95 shadow-2xl shadow-cyan-500/15 backdrop-blur"
+      data-terminal-floating-window
+    >
+      <div
+        class="relative overflow-hidden font-mono"
+        data-terminal-root
+        data-terminal-role="floating"
+        data-terminal-empty-text="top, klepaas, heimdall, argus 같은 명령으로 바로 이동할 수 있습니다."
+      >
+        <div class="flex items-center justify-between gap-3 border-b border-slate-700/50 bg-slate-800/80 px-4 py-3">
+          <div class="flex items-center gap-2">
+            <div class="flex gap-1.5">
+              <span class="h-3 w-3 rounded-full bg-red-500/80"></span>
+              <span class="h-3 w-3 rounded-full bg-yellow-500/80"></span>
+              <span class="h-3 w-3 rounded-full bg-green-500/80"></span>
+            </div>
+            <span class="ml-2 text-xs text-slate-400">~/navigator</span>
+          </div>
+
+          <button
+            type="button"
+            class="rounded-full border border-slate-700/60 bg-slate-900/70 px-3 py-1 text-[11px] uppercase tracking-[0.14em] text-slate-400 transition hover:border-slate-500 hover:text-slate-200"
+            data-terminal-floating-hide
+          >
+            hide
+          </button>
+        </div>
+
+        <div class="space-y-3 p-4 text-[13px]">
+          <div class="space-y-3" data-terminal-response aria-live="polite">
+            <div
+              class="rounded-xl border border-dashed border-slate-700/60 bg-slate-950/30 px-4 py-3 leading-relaxed text-slate-500"
+              data-terminal-empty
+            >
+              top, klepaas, heimdall, argus 같은 명령으로 바로 이동할 수 있습니다.
+            </div>
+          </div>
+
+          <div class="rounded-xl border border-slate-700/60 bg-slate-800/30 p-3">
+            <div class="flex flex-wrap gap-2">
+              {
+                floatingTerminalSuggestions.map((command) => (
+                  <button
+                    type="button"
+                    class="rounded-full border border-slate-600/60 bg-slate-900/80 px-3 py-1 text-[11px] text-cyan-300 transition hover:border-green-500/50 hover:text-green-400"
+                    data-terminal-suggestion={command}
+                  >
+                    {command}
+                  </button>
+                ))
+              }
+            </div>
+          </div>
+
+          <form
+            class="flex items-center gap-3 rounded-xl border border-slate-700/60 bg-slate-950/70 px-4 py-3"
+            data-terminal-form
+          >
+            <span class="text-green-400">$</span>
+            <label class="sr-only" for="floating-terminal-input">플로팅 콘솔 명령어 입력</label>
+            <input
+              id="floating-terminal-input"
+              class="w-full bg-transparent text-cyan-300 outline-none placeholder:text-slate-500"
+              type="text"
+              name="command"
+              autocomplete="off"
+              spellcheck="false"
+              placeholder="top, klepaas, heimdall, argus"
+              data-terminal-input
+            />
+            <span class="h-4 w-2 shrink-0 bg-green-400 terminal-cursor"></span>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script is:inline define:vars={{ terminalCommandCatalog }}>
     const normalizeTerminalCommand = (value) => value.trim().replace(/\s+/g, ' ').toLowerCase();
 
@@ -482,12 +676,12 @@ if (!contactActions.length && portfolioProfile.socials.blog) {
 
     const terminalAliasMap = buildTerminalAliasMap(terminalCommandCatalog);
 
-    const createTerminalEmptyState = () => {
+    const createTerminalEmptyState = (root) => {
       const emptyState = document.createElement('div');
       emptyState.className =
         'rounded-xl border border-dashed border-slate-700/60 bg-slate-950/30 px-4 py-3 leading-relaxed text-slate-500';
       emptyState.dataset.terminalEmpty = 'true';
-      emptyState.textContent = '아직 표시할 답변이 없습니다.';
+      emptyState.textContent = root.dataset.terminalEmptyText || '아직 표시할 답변이 없습니다.';
       return emptyState;
     };
 
@@ -503,6 +697,31 @@ if (!contactActions.length && portfolioProfile.socials.blog) {
       }
 
       return response;
+    };
+
+    const runTerminalAction = (action) => {
+      if (!action?.type) {
+        return;
+      }
+
+      if (action.type === 'scrollTop') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+
+      if (action.type === 'scroll' && action.target) {
+        const target = document.querySelector(action.target);
+
+        if (target instanceof HTMLElement) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        return;
+      }
+
+      if (action.type === 'link' && action.href) {
+        window.open(action.href, '_blank', 'noopener,noreferrer');
+      }
     };
 
     const hydrateTerminal = (root) => {
@@ -530,7 +749,7 @@ if (!contactActions.length && portfolioProfile.socials.blog) {
         const emptyState = response.querySelector('[data-terminal-empty]');
 
         if (!hasResponse && !emptyState) {
-          response.append(createTerminalEmptyState());
+          response.append(createTerminalEmptyState(root));
         }
 
         if (hasResponse && emptyState) {
@@ -548,7 +767,7 @@ if (!contactActions.length && portfolioProfile.socials.blog) {
         const matchedCommand = terminalAliasMap.get(normalized);
 
         if (matchedCommand?.key === 'clear') {
-          response.replaceChildren(createTerminalEmptyState());
+          response.replaceChildren(createTerminalEmptyState(root));
           return;
         }
 
@@ -558,7 +777,10 @@ if (!contactActions.length && portfolioProfile.socials.blog) {
 
         response.replaceChildren(createTerminalResponse(outputLines));
         syncEmptyState();
-        response.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+
+        if (matchedCommand?.action) {
+          runTerminalAction(matchedCommand.action);
+        }
       };
 
       form.addEventListener('submit', (event) => {
@@ -588,15 +810,83 @@ if (!contactActions.length && portfolioProfile.socials.blog) {
       syncEmptyState();
     };
 
-    const bootHeroTerminals = () => {
+    const hydrateFloatingDock = () => {
+      const shell = document.querySelector('[data-terminal-floating-shell]');
+      const heroTerminal = document.querySelector('[data-terminal-role="hero"]');
+
+      if (!(shell instanceof HTMLElement) || shell.dataset.terminalFloatingReady === 'true') {
+        return;
+      }
+
+      shell.dataset.terminalFloatingReady = 'true';
+
+      const windowEl = shell.querySelector('[data-terminal-floating-window]');
+      const trigger = shell.querySelector('[data-terminal-floating-trigger]');
+      const hideButtons = shell.querySelectorAll('[data-terminal-floating-hide]');
+
+      if (!(windowEl instanceof HTMLElement) || !(trigger instanceof HTMLButtonElement)) {
+        return;
+      }
+
+      let isVisible = false;
+      let isOpen = true;
+
+      const syncDock = () => {
+        shell.classList.toggle('hidden', !isVisible);
+        shell.setAttribute('aria-hidden', String(!isVisible));
+        windowEl.classList.toggle('hidden', !isVisible || !isOpen);
+        trigger.classList.toggle('hidden', !isVisible || isOpen);
+      };
+
+      const openDock = () => {
+        isOpen = true;
+        syncDock();
+
+        const input = shell.querySelector('[data-terminal-input]');
+
+        if (input instanceof HTMLInputElement) {
+          requestAnimationFrame(() => input.focus());
+        }
+      };
+
+      trigger.addEventListener('click', openDock);
+
+      hideButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+          isOpen = false;
+          syncDock();
+        });
+      });
+
+      if (heroTerminal instanceof HTMLElement) {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            const entry = entries[0];
+            const heroVisible = Boolean(entry?.isIntersecting && entry.intersectionRatio > 0.18);
+            isVisible = !heroVisible;
+            syncDock();
+          },
+          { threshold: [0, 0.18, 0.5] }
+        );
+
+        observer.observe(heroTerminal);
+      } else {
+        isVisible = true;
+        syncDock();
+      }
+    };
+
+    const bootTerminals = () => {
       document.querySelectorAll('[data-terminal-root]').forEach((root) => {
         if (root instanceof HTMLElement) {
           hydrateTerminal(root);
         }
       });
+
+      hydrateFloatingDock();
     };
 
-    bootHeroTerminals();
-    document.addEventListener('astro:page-load', bootHeroTerminals);
+    bootTerminals();
+    document.addEventListener('astro:page-load', bootTerminals);
   </script>
 </Layout>
