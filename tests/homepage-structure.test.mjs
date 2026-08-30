@@ -51,15 +51,47 @@ test('the web resume links the current PDF', () => {
   assert.match(resume, /href="\/resume\/yunho-cho-resume\.pdf"/);
 });
 
+test('the resume keeps printable project links on the public portfolio origin', () => {
+  assert.match(resume, /href="https:\/\/yoonman\.page\/projects\/heimdall"/);
+  assert.match(resume, /href="https:\/\/yoonman\.page\/projects\/klepaas"/);
+  assert.match(resume, /href="https:\/\/yoonman\.page\/projects\/gjallar"/);
+  assert.doesNotMatch(resume, /127\.0\.0\.1|localhost/);
+});
+
+test('ongoing personal projects include a public start month', () => {
+  assert.match(resume, /2026\.08 - 현재/);
+  assert.match(resume, /2026\.05 - 현재/);
+  assert.doesNotMatch(resume, />진행 중</);
+});
+
+test('the two-page print resume gives Heimdall a featured first-page narrative', () => {
+  const pageOneStart = resume.indexOf('data-print-page="01"');
+  const pageTwoStart = resume.indexOf('data-print-page="02"');
+  const pageOne = resume.slice(pageOneStart, pageTwoStart);
+  const pageTwo = resume.slice(pageTwoStart);
+  const printResume = resume.slice(resume.indexOf('class="resume-print"'));
+
+  assert.notEqual(pageOneStart, -1, 'Expected print page 01');
+  assert.notEqual(pageTwoStart, -1, 'Expected print page 02');
+  assert.equal([...pageOne.matchAll(/class="resume-print-project /g)].length, 1);
+  assert.equal([...pageTwo.matchAll(/class="resume-print-project /g)].length, 2);
+  assert.match(pageOne, /class="resume-print-featured-story"/);
+  assert.equal([...pageOne.matchAll(/data-print-flow-step/g)].length, 6);
+  assert.doesNotMatch(pageTwo, /resume-print-featured-story|data-print-flow-step/);
+  assert.equal([...pageTwo.matchAll(/<li>/g)].length, 4);
+  assert.doesNotMatch(printResume, /Validation environment/);
+  assert.doesNotMatch(printResume, /Implementation patterns/);
+});
+
 test('default page metadata reflects the current platform engineering portfolio', () => {
   assert.match(notFound, /Git 기반 Preview 배포와 Kubernetes·Proxmox 운영 도구/);
   assert.doesNotMatch(notFound, /Terraform|Ansible/);
 });
 
 test('the resume leads with deployment automation and keeps the validation environment factual', () => {
-  const heimdall = resumePositionOf('href="/projects/heimdall"');
-  const klepaas = resumePositionOf('href="/projects/klepaas"');
-  const gjallar = resumePositionOf('href="/projects/gjallar"');
+  const heimdall = resumePositionOf('href="https://yoonman.page/projects/heimdall"');
+  const klepaas = resumePositionOf('href="https://yoonman.page/projects/klepaas"');
+  const gjallar = resumePositionOf('href="https://yoonman.page/projects/gjallar"');
 
   assert.ok(heimdall < klepaas, 'Expected Heimdall before K-Le-PaaS in the resume');
   assert.ok(klepaas < gjallar, 'Expected K-Le-PaaS before Gjallar in the resume');

@@ -1276,9 +1276,13 @@ body:has(.resume-page) {
   }
 }
 
+.resume-print {
+  display: none;
+}
+
 @page {
   size: A4;
-  margin: 8mm 10mm;
+  margin: 9mm 11mm;
 }
 
 @media print {
@@ -1880,5 +1884,460 @@ body:has(.resume-page) {
 
   .resume-contact svg {
     display: none;
+  }
+}
+
+@media print {
+  .resume-page {
+    display: none !important;
+  }
+
+  .resume-print {
+    display: block !important;
+    background: #ffffff;
+    color: #111214;
+    font-family: var(--aw-font-sans), sans-serif;
+    font-size: 8.7pt;
+    line-height: 1.5;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .resume-print :where(h1, h2, h3, p, dl, dd, ul) {
+    margin: 0;
+  }
+
+  .resume-print :where(a) {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .resume-print-page {
+    display: flex;
+    box-sizing: border-box;
+    min-height: 276mm;
+    flex-direction: column;
+    break-after: page;
+  }
+
+  .resume-print-page:last-child {
+    break-after: auto;
+  }
+
+  .resume-print-header {
+    border-bottom: 1.5pt solid #111214;
+    padding-bottom: 3mm;
+  }
+
+  .resume-print-header > div:first-child {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 1mm 6mm;
+  }
+
+  .resume-print-header > div:first-child > p {
+    grid-column: 1 / -1;
+    font-family: var(--aw-font-mono);
+    font-size: 6.3pt;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .resume-print-header h1 {
+    font-size: 23pt;
+    font-weight: 650;
+    line-height: 1;
+  }
+
+  .resume-print-header > div:first-child > strong {
+    grid-column: 2;
+    grid-row: 2;
+    font-size: 11pt;
+    line-height: 1.1;
+  }
+
+  .resume-print-header > div:first-child > span {
+    grid-column: 1 / -1;
+    margin-top: 1mm;
+    color: #303238;
+    font-size: 8.4pt;
+  }
+
+  .resume-print-header dl {
+    display: flex;
+    gap: 6mm;
+    margin-top: 3mm;
+    border-top: 0.5pt solid #8d9097;
+    padding-top: 2mm;
+  }
+
+  .resume-print-header dl > div {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .resume-print-header dl > div:first-child {
+    flex: 1.35;
+  }
+
+  .resume-print-header dt,
+  .resume-print-profile > p,
+  .resume-print-validation > p,
+  .resume-print-project-heading > div > p,
+  .resume-print-project-role strong,
+  .resume-print-project-stack strong,
+  .resume-print-project-links strong {
+    font-family: var(--aw-font-mono);
+    font-size: 6.1pt;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .resume-print-header dd {
+    margin-top: 0.6mm;
+    overflow-wrap: anywhere;
+    font-size: 7.2pt;
+    line-height: 1.3;
+  }
+
+  .resume-print-header-compact {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    padding-bottom: 2.5mm;
+  }
+
+  .resume-print-header-compact > div:first-child {
+    display: grid;
+    grid-template-columns: auto auto;
+    align-items: baseline;
+    gap: 0 3mm;
+  }
+
+  .resume-print-header-compact > div:first-child > p {
+    grid-column: 1 / -1;
+  }
+
+  .resume-print-header-compact h1 {
+    font-size: 16pt;
+  }
+
+  .resume-print-header-compact > div:first-child > strong {
+    grid-column: 2;
+    grid-row: 2;
+    font-size: 8pt;
+  }
+
+  .resume-print-header-compact > p {
+    font-family: var(--aw-font-mono);
+    font-size: 6.5pt;
+  }
+
+  .resume-print-profile,
+  .resume-print-validation {
+    display: grid;
+    grid-template-columns: 0.28fr 1fr;
+    gap: 5mm;
+    border-bottom: 0.5pt solid #8d9097;
+    padding: 5mm 0;
+  }
+
+  .resume-print-profile h2,
+  .resume-print-validation h2 {
+    font-size: 13pt;
+    line-height: 1.2;
+  }
+
+  .resume-print-profile > div > p,
+  .resume-print-validation > div > p {
+    margin-top: 1.5mm;
+    color: #303238;
+    line-height: 1.5;
+  }
+
+  .resume-print-skills {
+    border-bottom: 0.5pt solid #8d9097;
+    padding: 4mm 0;
+  }
+
+  .resume-print-skills > h2,
+  .resume-print-projects > h2,
+  .resume-print-credentials > h2,
+  .resume-print-links > h2 {
+    font-family: var(--aw-font-mono);
+    font-size: 7pt;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .resume-print-skills dl {
+    display: grid;
+    gap: 0.7mm;
+    margin-top: 1.8mm;
+  }
+
+  .resume-print-skills dl > div {
+    display: grid;
+    grid-template-columns: 0.28fr 1fr;
+    gap: 5mm;
+  }
+
+  .resume-print-skills dt {
+    font-weight: 650;
+  }
+
+  .resume-print-skills dd {
+    color: #303238;
+  }
+
+  .resume-print-projects {
+    padding-top: 4mm;
+  }
+
+  .resume-print-project {
+    --resume-print-accent: #2f5ee5;
+    break-inside: avoid;
+    border-top: 0.5pt solid #111214;
+    padding: 4.5mm 0 5mm;
+  }
+
+  .resume-print-project:first-of-type {
+    margin-top: 2mm;
+  }
+
+  .resume-print-tone-green {
+    --resume-print-accent: #0b9668;
+  }
+
+  .resume-print-tone-red {
+    --resume-print-accent: #e14d43;
+  }
+
+  .resume-print-tone-yellow {
+    --resume-print-accent: #b17b00;
+  }
+
+  .resume-print-project-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 6mm;
+  }
+
+  .resume-print-project-heading h3 {
+    margin-top: 0.8mm;
+    font-size: 16pt;
+    line-height: 1;
+  }
+
+  .resume-print-project-heading > div > strong {
+    display: block;
+    margin-top: 1mm;
+    font-size: 8.8pt;
+  }
+
+  .resume-print-project-heading > span {
+    display: grid;
+    width: 7mm;
+    height: 7mm;
+    flex: 0 0 auto;
+    place-items: center;
+    background: var(--resume-print-accent);
+    color: #ffffff;
+    font-family: var(--aw-font-mono);
+    font-size: 6.2pt;
+  }
+
+  .resume-print-project-summary {
+    margin-top: 2.2mm !important;
+    color: #303238;
+  }
+
+  .resume-print-project-role,
+  .resume-print-project-stack,
+  .resume-print-project-links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 1mm 2.5mm;
+    margin-top: 1.9mm !important;
+  }
+
+  .resume-print-project-role span,
+  .resume-print-project-stack span {
+    color: #303238;
+  }
+
+  .resume-print-project ul {
+    display: grid;
+    gap: 1.3mm;
+    margin-top: 2.3mm;
+    padding: 0;
+    list-style: none;
+  }
+
+  .resume-print-project li {
+    position: relative;
+    padding-left: 3mm;
+  }
+
+  .resume-print-project li::before {
+    position: absolute;
+    top: 0.7em;
+    left: 0;
+    width: 1.6mm;
+    height: 0.8pt;
+    background: var(--resume-print-accent);
+    content: '';
+  }
+
+  .resume-print-featured-story {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 3mm;
+    margin-top: 4.5mm;
+  }
+
+  .resume-print-featured-story section {
+    min-height: 34mm;
+    border-top: 1.5pt solid var(--resume-print-accent);
+    background: #f3f5f8;
+    padding: 3mm;
+  }
+
+  .resume-print-featured-story strong,
+  .resume-print-delivery-flow > strong,
+  .resume-print-delivery-flow [data-print-flow-step] > span {
+    font-family: var(--aw-font-mono);
+    font-size: 6.1pt;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .resume-print-featured-story p {
+    margin-top: 2mm !important;
+    color: #303238;
+    line-height: 1.55;
+  }
+
+  .resume-print-delivery-flow {
+    margin-top: 5mm;
+    border-top: 0.5pt solid #8d9097;
+    border-bottom: 0.5pt solid #8d9097;
+    padding: 3mm 0 3.5mm;
+  }
+
+  .resume-print-delivery-flow > div {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    margin-top: 2mm;
+  }
+
+  .resume-print-delivery-flow [data-print-flow-step] {
+    position: relative;
+    min-width: 0;
+    border-left: 0.5pt solid #b8bbc1;
+    padding: 0 2.5mm;
+  }
+
+  .resume-print-delivery-flow [data-print-flow-step]:first-child {
+    border-left: 0;
+    padding-left: 0;
+  }
+
+  .resume-print-delivery-flow [data-print-flow-step]:last-child {
+    padding-right: 0;
+  }
+
+  .resume-print-delivery-flow [data-print-flow-step] > span {
+    display: block;
+    color: var(--resume-print-accent);
+  }
+
+  .resume-print-delivery-flow [data-print-flow-step] > strong {
+    display: block;
+    margin-top: 0.8mm;
+    font-size: 7.2pt;
+  }
+
+  .resume-print-delivery-flow [data-print-flow-step] > small {
+    display: block;
+    margin-top: 0.8mm;
+    color: #4b4e55;
+    font-size: 6.2pt;
+    line-height: 1.35;
+  }
+
+  .resume-print-project-footer {
+    margin-top: 4mm;
+  }
+
+  .resume-print-project-footer .resume-print-project-stack {
+    margin-top: 0 !important;
+  }
+
+  .resume-print-project-links a {
+    border-bottom: 0.5pt solid #111214;
+    font-family: var(--aw-font-mono);
+    font-size: 6.3pt;
+  }
+
+  .resume-print-validation {
+    margin-top: 8mm;
+    border-top: 1.5pt solid #111214;
+  }
+
+  .resume-print-validation-facts {
+    border-top: 0.5pt solid #8d9097;
+    padding-top: 1.5mm;
+    font-family: var(--aw-font-mono);
+    font-size: 6.7pt;
+  }
+
+  .resume-print-credentials {
+    margin-top: 8mm;
+    border-top: 1.5pt solid #111214;
+    border-bottom: 0.5pt solid #8d9097;
+    padding: 5mm 0;
+  }
+
+  .resume-print-credentials > div {
+    display: grid;
+    gap: 1.5mm;
+    margin-top: 2mm;
+  }
+
+  .resume-print-credentials p {
+    display: grid;
+    grid-template-columns: 0.28fr 1fr;
+    gap: 5mm;
+  }
+
+  .resume-print-credentials strong {
+    font-size: 8pt;
+  }
+
+  .resume-print-credentials span {
+    color: #303238;
+  }
+
+  .resume-print-links {
+    margin-top: auto;
+    border-top: 1.5pt solid #111214;
+    padding-top: 3mm;
+  }
+
+  .resume-print-links p {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2mm 6mm;
+    margin-top: 1.5mm;
+    font-family: var(--aw-font-mono);
+    font-size: 6.7pt;
+  }
+
+  .resume-print-links a {
+    border-bottom: 0.5pt solid #111214;
   }
 }

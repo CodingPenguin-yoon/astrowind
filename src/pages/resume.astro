@@ -32,9 +32,25 @@ const projects = resumeProjects.map((resume) => {
     throw new Error(`Missing homepage project data for ${resume.id}`);
   }
 
-  return { ...project, resume };
+  return {
+    ...project,
+    resume,
+    publicCaseStudyHref: new URL(project.caseStudyHref, `${portfolioHref}/`).toString(),
+  };
 });
 const selectedProjects = projects;
+const printPages = [
+  { number: '01', projects: selectedProjects.slice(0, 1) },
+  { number: '02', projects: selectedProjects.slice(1) },
+] as const;
+const heimdallPrintFlow = [
+  { label: 'Register', detail: '저장소·서비스 구성' },
+  { label: 'Select', detail: 'main commit 선택' },
+  { label: 'Build', detail: 'exact SHA·Docker image' },
+  { label: 'Run', detail: '환경변수·candidate' },
+  { label: 'Verify', detail: '전체 health check' },
+  { label: 'Publish', detail: 'Gateway·public hostname' },
+] as const;
 ---
 
 <PageLayout metadata={metadata}>
@@ -107,8 +123,12 @@ const selectedProjects = projects;
             <dd><a href={emailHref}>{email}</a></dd>
           </div>
           <div>
-            <dt>Version</dt>
-            <dd>{resumeProfile.updated}</dd>
+            <dt>Links</dt>
+            <dd>
+              <a href={githubHref} target="_blank" rel="noreferrer">GitHub</a>
+              {' / '}
+              <a href={portfolioHref} target="_blank" rel="noreferrer">Portfolio</a>
+            </dd>
           </div>
         </dl>
       </div>
@@ -118,7 +138,7 @@ const selectedProjects = projects;
       <div class="resume-section-inner resume-profile-grid">
         <p class="resume-section-label">Profile</p>
         <div>
-          <h2 id="profile-title">반복되는 배포와 인프라 작업을 직접 자동화했습니다.</h2>
+          <h2 id="profile-title">자동화한 작업이 실제로 반영됐는지 다시 확인합니다.</h2>
           <p>{resumeProfile.summary}</p>
 
           <div class="resume-contact-row">
@@ -202,7 +222,7 @@ const selectedProjects = projects;
                 <div class="resume-project-copy">
                   <p class="resume-project-category">{project.category}</p>
                   <h3>
-                    <a href={project.caseStudyHref}>{project.name}</a>
+                    <a href={project.publicCaseStudyHref}>{project.name}</a>
                   </h3>
                   <p class="resume-project-title">{project.resume.title}</p>
                   <p class="resume-project-summary">{project.resume.summary}</p>
@@ -232,7 +252,7 @@ const selectedProjects = projects;
                   </ul>
 
                   <div class="resume-project-links">
-                    <a href={project.caseStudyHref}>
+                    <a href={project.publicCaseStudyHref}>
                       Case study
                       <Icon name="tabler:arrow-right" />
                     </a>
@@ -246,7 +266,7 @@ const selectedProjects = projects;
                 {project.visual ? (
                   <a
                     class="resume-project-visual"
-                    href={project.caseStudyHref}
+                    href={project.publicCaseStudyHref}
                     aria-label={`${project.name} 상세 보기`}
                   >
                     <img src={project.visual.src} alt={project.visual.alt} loading="lazy" />
@@ -327,6 +347,193 @@ const selectedProjects = projects;
         </div>
       </div>
     </section>
+  </div>
+
+  <div class="resume-print" aria-label="조윤호 Platform Engineer 이력서 인쇄본">
+    {
+      printPages.map((page) => (
+        <section class="resume-print-page" data-print-page={page.number}>
+          <header class:list={['resume-print-header', page.number === '02' && 'resume-print-header-compact']}>
+            <div>
+              <p>Resume / {page.number}</p>
+              <h1>{resumeProfile.name}</h1>
+              <strong>{resumeProfile.role}</strong>
+              {page.number === '01' ? <span>{resumeProfile.statement}</span> : null}
+            </div>
+            {page.number === '01' ? (
+              <dl>
+                <div>
+                  <dt>Focus</dt>
+                  <dd>{resumeProfile.secondaryRole}</dd>
+                </div>
+                <div>
+                  <dt>Location</dt>
+                  <dd>{resumeProfile.location}</dd>
+                </div>
+                <div>
+                  <dt>Contact</dt>
+                  <dd>
+                    <a href={emailHref}>{email}</a>
+                  </dd>
+                </div>
+                <div>
+                  <dt>Links</dt>
+                  <dd>
+                    <a href={githubHref}>GitHub</a>
+                    {' / '}
+                    <a href={portfolioHref}>Portfolio</a>
+                  </dd>
+                </div>
+              </dl>
+            ) : (
+              <p>
+                {resumeProfile.nameEn} · {email}
+              </p>
+            )}
+          </header>
+
+          {page.number === '01' ? (
+            <>
+              <section class="resume-print-profile" aria-labelledby="print-profile-title">
+                <p>Profile</p>
+                <div>
+                  <h2 id="print-profile-title">자동화한 작업이 실제로 반영됐는지 다시 확인합니다.</h2>
+                  <p>{resumeProfile.summary}</p>
+                </div>
+              </section>
+
+              <section class="resume-print-skills" aria-labelledby="print-skills-title">
+                <h2 id="print-skills-title">Core skills</h2>
+                <dl>
+                  {resumeSkillGroups.map((group) => (
+                    <div>
+                      <dt>{group.label}</dt>
+                      <dd>{group.items.join(' · ')}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </section>
+            </>
+          ) : null}
+
+          <section class="resume-print-projects" aria-labelledby={`print-projects-${page.number}`}>
+            <h2 id={`print-projects-${page.number}`}>
+              {page.number === '01' ? 'Selected projects' : 'Selected projects / continued'}
+            </h2>
+
+            {page.projects.map((project) => (
+              <article class:list={['resume-print-project', `resume-print-tone-${project.tone}`]}>
+                <div class="resume-print-project-heading">
+                  <div>
+                    <p>
+                      {project.resume.type} · {project.resume.period}
+                    </p>
+                    <h3>{project.name}</h3>
+                    <strong>{project.resume.title}</strong>
+                  </div>
+                  <span>{project.index}</span>
+                </div>
+
+                {page.number === '01' && project.id === 'heimdall' ? (
+                  <>
+                    <p class="resume-print-project-role">
+                      <strong>Contribution</strong>
+                      <span>{project.resume.role}</span>
+                    </p>
+
+                    <div class="resume-print-featured-story">
+                      <section>
+                        <strong>Problem</strong>
+                        <p>{project.resume.summary}</p>
+                      </section>
+                      <section>
+                        <strong>Automation</strong>
+                        <p>{project.resume.highlights[0]}</p>
+                      </section>
+                      <section>
+                        <strong>Verification</strong>
+                        <p>{project.resume.highlights[1]}</p>
+                      </section>
+                    </div>
+
+                    <section class="resume-print-delivery-flow" aria-label="Heimdall 배포 흐름">
+                      <strong>Delivery flow</strong>
+                      <div>
+                        {heimdallPrintFlow.map((step, index) => (
+                          <div data-print-flow-step>
+                            <span>{String(index + 1).padStart(2, '0')}</span>
+                            <strong>{step.label}</strong>
+                            <small>{step.detail}</small>
+                          </div>
+                        ))}
+                      </div>
+                    </section>
+                  </>
+                ) : (
+                  <>
+                    <p class="resume-print-project-summary">{project.resume.summary}</p>
+                    <p class="resume-print-project-role">
+                      <strong>Contribution</strong>
+                      <span>{project.resume.role}</span>
+                    </p>
+                    <ul>
+                      {project.resume.highlights.map((highlight) => (
+                        <li>{highlight}</li>
+                      ))}
+                    </ul>
+                  </>
+                )}
+
+                <footer class="resume-print-project-footer">
+                  <p class="resume-print-project-stack">
+                    <strong>Stack</strong>
+                    <span>{project.resume.stack.join(' · ')}</span>
+                  </p>
+
+                  <div class="resume-print-project-links" aria-label={`${project.name} 근거 링크`}>
+                    <strong>Evidence</strong>
+                    <a href={project.publicCaseStudyHref}>Case study</a>
+                    <a href={project.repository}>GitHub</a>
+                    {project.resume.evidence?.map((item) => (
+                      <a href={item.href}>{item.label}</a>
+                    ))}
+                  </div>
+                </footer>
+              </article>
+            ))}
+          </section>
+
+          {page.number === '02' ? (
+            <>
+              <section class="resume-print-credentials" aria-labelledby="print-credentials-title">
+                <h2 id="print-credentials-title">Education & certifications</h2>
+                <div>
+                  <p>
+                    <strong>{resumeEducation.school}</strong>
+                    <span>
+                      {resumeEducation.major} · {resumeEducation.status} · {resumeEducation.date}
+                    </span>
+                  </p>
+                  <p>
+                    <strong>Certifications</strong>
+                    <span>{resumeCertifications.join(' · ')}</span>
+                  </p>
+                </div>
+              </section>
+
+              <section class="resume-print-links" aria-labelledby="print-links-title">
+                <h2 id="print-links-title">Contact & links</h2>
+                <p>
+                  <a href={emailHref}>{email}</a>
+                  <a href={githubHref}>github.com/CodingPenguin-yoon</a>
+                  <a href={portfolioHref}>yoonman.page</a>
+                </p>
+              </section>
+            </>
+          ) : null}
+        </section>
+      ))
+    }
   </div>
 
   <footer slot="footer" class="resume-footer">
